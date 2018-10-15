@@ -1,6 +1,6 @@
-from _10_01.snake.game import Game
-from _10_01.snake.object.snake import Snake
-from _10_01.snake.object.apple import Apple
+from game import Game
+from object.snake import Snake
+from object.apple import Apple
 
 
 if __name__ == '__main__':
