@@ -1,6 +1,6 @@
 import tkinter
 import time
-from _10_16.ImageViewer.gui import ViewWindow
+from gui import ViewWindow
 
 
 def loop(mod='free', t=3):
