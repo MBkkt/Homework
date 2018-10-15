@@ -8,6 +8,7 @@ while [[ -n $1 ]]; do
     *) break;;
   esac
 done
+
 sfx=$1
 shift
 
