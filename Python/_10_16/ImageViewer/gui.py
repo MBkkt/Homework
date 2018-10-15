@@ -1,12 +1,12 @@
 import tkinter
-import _10_16.ImageViewer.paths as path
-import _10_16.ImageViewer.imager as imager
+import paths
+import imager
 
 
 class ViewWindow(tkinter.Canvas):
     def __init__(self, *args, **kwargs):
         tkinter.Canvas.__init__(self, *args, **kwargs)
-        self.imageLeft = path.get_paths()
+        self.imageLeft = paths.get_paths()
         self.imageRight = []
         self.width = self.winfo_screenwidth()
         self.height = self.winfo_screenheight()
@@ -14,7 +14,7 @@ class ViewWindow(tkinter.Canvas):
 
     def show_image(self, path):
         img = imager.tk_image(path)
-        self.ready = self.create_image(self.winfo_screenwidth() / 2, self.winfo_screenheight() / 2,
+        self.ready = self.create_image(self.winfo_screenwidth() // 2, self.winfo_screenheight() // 2,
                                        image=img, anchor='center')
         self.image = img
         self.master.title(f'Image Viewer by MBkkt ({path})')
@@ -25,7 +25,7 @@ class ViewWindow(tkinter.Canvas):
                 img = self.imageRight.pop()
                 self.show_image(img)
                 self.imageLeft.append(img)
-            except EOFError:
+            except:
                 self.previous_image()
 
     def next_image(self):
@@ -34,7 +34,7 @@ class ViewWindow(tkinter.Canvas):
                 img = self.imageLeft.pop()
                 self.show_image(img)
                 self.imageRight.append(img)
-            except EOFError:
+            except:
                 self.next_image()
 
     def create_buttons(self):
