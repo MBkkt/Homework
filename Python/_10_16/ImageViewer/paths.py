@@ -1,5 +1,5 @@
 import os
-from _10_16.ImageViewer.config import imageDir, extension
+from config import imageDir, extension
 
 
 def get_paths():
