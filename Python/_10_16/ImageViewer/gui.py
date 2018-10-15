@@ -38,5 +38,5 @@ class ViewWindow(tkinter.Canvas):
                 self.next_image()
 
     def create_buttons(self):
-        tkinter.Button(self, text="<", command=self.previous_image).place(x=10, y=10)
-        tkinter.Button(self, text=">", command=self.next_image).place(x=30, y=10)
+        tkinter.Button(self, text='<', command=self.previous_image).place(x=10, y=10)
+        tkinter.Button(self, text='>', command=self.next_image).place(x=30, y=10)
