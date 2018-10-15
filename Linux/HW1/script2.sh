@@ -1,5 +1,6 @@
 #!/bin/bash
-# ./script2.sh [-d] replace [mask] directory
+# ./script2.sh [-d] replace ['mask'] [directory]
+
 while [[ -n $1 ]]; do
   case $1 in
     --) shift ;;
