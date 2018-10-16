@@ -1,5 +1,5 @@
 #!/bin/bash
-# ./script.sh [user] [file]
+# ./script.sh [-f file] [user]
 
 f='/etc/passwd'
 user=$USER
