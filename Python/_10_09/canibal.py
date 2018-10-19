@@ -8,24 +8,25 @@
 from itertools import product
 
 
-def path(count=3):
-    # boat: missioner canibal
-    boats = [(1, 1), (0, 2), (2, 0)]
-    for variant in product(boats, boats, boats):
-        if sum(i[0] for i in variant) != sum(i[1] for i in variant) != count:
-            continue
-        old = [count, count]  # out
-        new = [0, 0]  # in
-        for boat in variant:
-            old[0] -= boat[0]
-            old[1] -= boat[1]
-            new[0] += boat[0]
-            new[1] += boat[1]
-            if 0 < new[0] < new[1] or 0 < old[0] < old[1]:
-                break
+def solve(m_count, c_count, boat=1):
+    if m_count == c_count == boat == 0:
+        print('Win')
+    elif boat > 0:
+        if m_count < c_count:
+            print(f'2 cannibals go                    '
+                  f'{m_count} missionaries and {c_count-2} cannibals left')
+            solve(m_count, c_count - 2, boat - 1)
         else:
-            yield variant
+            print(f'1 missionary and 1 cannibal go    '
+                  f'{m_count-1} missionaries and {c_count-1} cannibals left')
+            solve(m_count - 1, c_count - 1, boat - 1)
+    else:
+        print('One cannibal back')
+        solve(m_count, c_count + 1, 1)
 
 
 if __name__ == '__main__':
-    print(*path(), sep='\n')
+    # missionar = int(input())
+    # cannibal = int(input())
+    # boats = int(input())
+    solve(3, 3, 1)
