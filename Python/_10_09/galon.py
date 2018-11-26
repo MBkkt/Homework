@@ -19,7 +19,7 @@ def answ(one, two, k=0, ans=''):
         # print(count, lim)
         exit(0)
     elif k == depth:
-        pass
+        return None
         # lim += 1
     else:
         temp = min(one[0] + two[0], one[1])
