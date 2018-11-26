@@ -9,6 +9,11 @@ while [[ -n $1 ]]; do
   esac
 done
 
+if [[ -z $1 ]]; then
+  echo "Missing required arguments"
+  exit
+fi
+
 sfx=$1
 shift
 
