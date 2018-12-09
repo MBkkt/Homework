@@ -46,7 +46,7 @@ class FileNoExist(MyException):
 ########################################################################################################################
 
 class Factory:
-    def __init__(self, app=True, load=False, count=1000, debug=False):
+    def __init__(self, app=True, load=True, count=1000, debug=False):
         self._app = app
         self._load = load
         self._debug = debug
