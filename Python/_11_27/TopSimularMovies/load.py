@@ -105,7 +105,7 @@ def load_db():
 
 
 if __name__ == '__main__':
-    new_data_of_table = False
+    new_data_of_table = True
     new_data_to_db = True
     if new_data_of_table:
         load_dict_of_table()
