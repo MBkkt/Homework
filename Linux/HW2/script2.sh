@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# usage: ./script2_2.sh NameValute [date(dd/mm/yyyy)]
+# usage: ./script2_2.sh name_valute [date(dd/mm/yyyy)]
 
 if [[ -z $1 ]]; then
-	echo "Don't correct agrs"
+    echo "Don't correct agrs"
     exit
 fi
 
@@ -18,7 +18,7 @@ temp=${temp##*$valute}
 if [[ "${temp:2:3}" == 'xml' ]]; then
     echo "Name valute isn't correct"
 else
-	temp=${temp%%</Value>*}
-	temp=${temp##*<Value>}
-	echo $temp
+    temp=${temp%%</Value>*}
+    temp=${temp##*<Value>}
+    echo $temp
 fi
