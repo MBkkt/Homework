@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# usage: ./script4.sh "bank" sum valute
+# usage: ./script4.sh "bank" sum valute 
+# you need script2.sh
 
 if (( $# != 3 )); then
     echo "Don't correct input"
@@ -34,6 +35,6 @@ if [[ -z $datee ]]; then
     echo "Don't correct data"
     exit
 fi
-x=`./script1.sh $valute $datee`
+x=`./script2.sh $valute $datee`
 let "x=$x*$sum"
 echo $x
