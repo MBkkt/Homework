@@ -4,15 +4,15 @@
 #include <string_view>
 #include <vector>
 
-size_t find_new_substr(std::string s, size_t pos) {
-    std::reverse(s.begin(), s.end());
-    size_t n = pos, max = 0;
-    std::vector<size_t> z(n, 0);
+size_t find_new_substr(const std::string_view s, size_t pos) {
+    size_t max = 0;
+    std::vector<size_t> z(pos, 0);
+    auto it = s.rbegin();
     for (size_t i = 1, l = 0, r = 0; i < pos; ++i) {
         if (i <= r) {
             z[i] = std::min(r - i + 1, z[i - l]);
         }
-        while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+        while (i + z[i] < pos && *(it + z[i]) == *(it + i + z[i])) {
             ++z[i];
         }
         if (i + z[i] - 1 > r) {
