@@ -33,6 +33,6 @@ int main() {
     for (size_t i = 0; i < s.size(); ++i) {
         ans += find_new_substr(s, i + 1);
     }
-    std::cout << ans;
+    std::cout << ans << std::endl;
     return 0;
 }
