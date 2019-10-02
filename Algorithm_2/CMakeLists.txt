@@ -10,7 +10,7 @@ add_executable(task-1.2 Homework_1/task_2.cpp)
 
 add_executable(task-1.3 Homework_1/task_3.cpp)
 
-add_executable(task-1.4 Homework_1/task_4.cpp)
+add_executable(task-1.4 Homework_1/task_4/task_4.cpp)
 
 add_executable(task-1.5 Homework_1/task_5.cpp)
 
