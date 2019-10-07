@@ -28,7 +28,7 @@ struct Literal : RegexExpr {
     }
     char value;
 
-    ExprType GetType() const {
+    ExprType GetType() const override {
         return ExprType::Literal;
     }
     std::string ToStr(size_t indent_lvl) const override {
@@ -41,7 +41,7 @@ struct Repeat : RegexExpr {
     }
     std::unique_ptr<RegexExpr> expr;
 
-    ExprType GetType() const {
+    ExprType GetType() const override {
         return ExprType::Repeat;
     }
     std::string ToStr(size_t indent_lvl) const override {
@@ -54,7 +54,7 @@ struct Plus : RegexExpr {
     }
     std::unique_ptr<RegexExpr> expr;
 
-    ExprType GetType() const {
+    ExprType GetType() const override {
         return ExprType::Plus;
     }
     std::string ToStr(size_t indent_lvl) const override {
@@ -69,7 +69,7 @@ struct Or : RegexExpr {
     std::unique_ptr<RegexExpr> left_expr;
     std::unique_ptr<RegexExpr> right_expr;
 
-    ExprType GetType() const {
+    ExprType GetType() const override {
         return ExprType::Or;
     }
     std::string ToStr(size_t indent_lvl) const override {
@@ -87,7 +87,7 @@ struct Concat : RegexExpr {
     std::unique_ptr<RegexExpr> left_expr;
     std::unique_ptr<RegexExpr> right_expr;
 
-    ExprType GetType() const {
+    ExprType GetType() const override {
         return ExprType::Concat;
     }
     std::string ToStr(size_t indent_lvl) const override {
@@ -112,7 +112,7 @@ class AST {
  private:
     std::unique_ptr<RegexExpr> AstBuilder(std::unique_ptr<RegexExpr> left_expr) {
         if (pattern_.empty()) {
-            return std::move(left_expr);
+            return left_expr;
         }
         char now_symbol = pattern_.front();
         pattern_ = pattern_.substr(1);
@@ -127,12 +127,12 @@ class AST {
             if (left_expr) {
                 return std::make_unique<Concat>(std::move(left_expr), std::move(right_expr));
             } else {
-                return std::move(right_expr);
+                return right_expr;
             }
         }
         case ')': {
             --current_level;
-            return std::move(left_expr);
+            return left_expr;
         }
         case '+': {
             return AstBuilder(std::make_unique<Plus>(std::move(left_expr)));
@@ -142,6 +142,10 @@ class AST {
         }
         case '|': {
             return std::make_unique<Or>(std::move(left_expr), AstBuilder(nullptr));
+        }
+        case '\\': {
+            now_symbol = pattern_.front();
+            pattern_ = pattern_.substr(1);
         }
         default: {
             if (left_expr) {
@@ -271,12 +275,12 @@ class NFA {
 
 }
 int main() {
-    std::string regex_expr = "a(b|c)+(d|e)*";
+    std::string regex_expr = R"((a|b)+)";
     regex::AST parser{regex_expr};
     std::cout << parser.AstToStr() << std::endl;
     regex::NFA nfa{parser};
     std::cout << nfa.NfaToStr() << std::endl;
-    std::string main_str = "adee";
+    std::string main_str = R"(abaa)";
     std::cout << std::boolalpha << nfa.Match(main_str, nfa.start_) << std::endl;
 
     return 0;
