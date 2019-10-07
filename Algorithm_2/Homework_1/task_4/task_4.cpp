@@ -143,11 +143,11 @@ class AST {
         case '|': {
             return std::make_unique<Or>(std::move(left_expr), AstBuilder(nullptr));
         }
-        case '\\': {
-            now_symbol = pattern_.front();
-            pattern_ = pattern_.substr(1);
-        }
         default: {
+            if (now_symbol == '\\') {
+                now_symbol = pattern_.front();
+                pattern_ = pattern_.substr(1);
+            }
             if (left_expr) {
                 return std::make_unique<Concat>(std::move(left_expr),
                                                 AstBuilder(std::make_unique<Literal>(now_symbol)));
@@ -181,28 +181,25 @@ class NFA {
         }
         return out.str();
     }
+    bool Match(std::string_view str) const {
+        return Search(str, start_, str.size() * 10);
 
-    bool Match(std::string_view str, Node curr, std::size_t depth = 0) const {
-        if (str.empty()) {
-            for (auto temp = graph.find(curr); curr != end_ && temp != graph.end() && !temp->second.empty();) {
-                for (auto &neibor: graph.at(curr)) {
-                    if (neibor.first == '\0') {
-                        curr = neibor.second;
-                    }
-                }
-                temp = graph.find(curr);
-            }
-            return curr == end_;
+    }
+
+ private:
+    Node start_ = 0, end_ = 0;
+    Node counter_ = 0;
+
+    bool Search(std::string_view str, Node curr, std::size_t max_depth) const {
+        if (max_depth == 0 || graph.count(curr) == 0) {
+            return str.empty() && curr == end_;
         }
         bool ans = false;
-        if (graph.count(curr) == 0 || depth > 100) {
-            return ans;
-        }
         for (auto &neibor: graph.at(curr)) {
             if (!str.empty() && (neibor.first == '.' || neibor.first == str.front())) {
-                ans = ans || Match(str.substr(1), neibor.second, depth + 1);
+                ans = ans || Search(str.substr(1), neibor.second, max_depth - 1);
             } else if (neibor.first == '\0') {
-                ans = ans || Match(str, neibor.second, depth + 1);
+                ans = ans || Search(str, neibor.second, max_depth - 1);
             }
             if (ans) {
                 break;
@@ -210,9 +207,7 @@ class NFA {
         }
         return ans;
     }
-    Node start_ = 0, end_ = 0;
- private:
-    Node counter_ = 0;
+
     Node CreateNode() {
         return counter_++;
     }
@@ -275,13 +270,13 @@ class NFA {
 
 }
 int main() {
-    std::string regex_expr = R"((a|b)+)";
+    std::string regex_expr = R"((sada)|(adasd)|((sdsd)*aa))";
     regex::AST parser{regex_expr};
-    std::cout << parser.AstToStr() << std::endl;
+    // std::cout << parser.AstToStr() << std::endl;
     regex::NFA nfa{parser};
-    std::cout << nfa.NfaToStr() << std::endl;
-    std::string main_str = R"(abaa)";
-    std::cout << std::boolalpha << nfa.Match(main_str, nfa.start_) << std::endl;
+    // std::cout << nfa.NfaToStr() << std::endl;
+    std::string main_str = R"(sdsdsdsdaa)";
+    std::cout << std::boolalpha << nfa.Match(main_str) << std::endl;
 
     return 0;
 }
