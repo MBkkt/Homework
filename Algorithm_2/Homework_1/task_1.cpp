@@ -22,7 +22,7 @@ std::size_t max_prefix(BidirectionalIterator begin, BidirectionalIterator end) {
     return result;
 }
 
-std::size_t count_different_substr(const std::string& str) {
+std::size_t count_different_substr(const std::string_view str) {
     std::size_t count = 0;
     for (std::size_t i = 1; i <= str.size(); ++i) {
         count += i - max_prefix(str.rbegin() + (str.size() - i), str.rend());
