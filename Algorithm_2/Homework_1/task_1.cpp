@@ -1,38 +1,48 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
-#include <string_view>
 #include <vector>
+#include <cassert>
 
-size_t find_new_substr(const std::string_view s, size_t pos) {
-    size_t max = 0;
-    std::vector<size_t> z(pos, 0);
-    auto it = s.rbegin();
-    for (size_t i = 1, l = 0, r = 0; i < pos; ++i) {
-        if (i <= r) {
-            z[i] = std::min(r - i + 1, z[i - l]);
+template<typename BidirectionalIterator>
+std::size_t max_prefix(BidirectionalIterator begin, BidirectionalIterator end) {
+    std::size_t size = end - begin;
+    std::vector<std::size_t> prefix(size, 0);
+    auto result = prefix[0];
+    for (std::size_t i = 1; i < size; ++i) {
+        auto j = prefix[i - 1];
+        while (j != 0 && *(begin + j) != *(begin + i)) {
+            j = prefix[j - 1];
         }
-        while (i + z[i] < pos && *(it + z[i]) == *(it + i + z[i])) {
-            ++z[i];
-        }
-        if (i + z[i] - 1 > r) {
-            l = i;
-            r = i + z[i] - 1;
-        }
-        if (z[i] > max) {
-            max = z[i];
+        if (*(begin + j) == *(begin + i)) {
+            prefix[i] = j + 1;
+            result = std::max(result, prefix[i]);
         }
     }
-    return pos - max;
+    return result;
+}
+
+std::size_t count_different_substr(const std::string& str) {
+    std::size_t count = 0;
+    for (std::size_t i = 1; i <= str.size(); ++i) {
+        count += i - max_prefix(str.rbegin() + (str.size() - i), str.rend());
+    }
+    return count;
+}
+
+void TestAll() {
+    assert(count_different_substr("") == 0);
+    assert(count_different_substr("abacaba") == 21);
+    assert(count_different_substr("aaaaaaa") == 7);
+    assert(count_different_substr("cd") == 3);
+    assert(count_different_substr("c") == 1);
+    assert(count_different_substr("ccdc") == 8);
 }
 
 int main() {
-    size_t ans = 0;
-    std::string s;
-    std::cin >> s;
-    for (size_t i = 0; i < s.size(); ++i) {
-        ans += find_new_substr(s, i + 1);
-    }
-    std::cout << ans << std::endl;
+    TestAll();
+    std::string str;
+    std::cin >> str;
+    std::cout << count_different_substr(str);
     return 0;
 }
